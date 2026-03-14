@@ -264,9 +264,9 @@ Qualität
 
 | Risiko / Schuld | Auswirkung | Maßnahme |
 |-----------------|------------|----------|
-| Spring Boot 2.7 ist End-of-Life | ~~Keine Sicherheitsupdates vom Projekt.~~ Erledigt – Migration auf Spring Boot 3.4 und Java 21 ist abgeschlossen. | – |
-| Kein Fehlerhandling / `@ControllerAdvice` | Unbehandelte Exceptions erzeugen Spring-Default-Fehlerseiten. | Bei Bedarf globalen Exception-Handler ergänzen. |
-| Keine Persistenz | Zustand geht bei Neustart verloren. | Relevant erst, wenn zustandsbehaftete Features hinzukommen. |
+| ~~Spring Boot 2.7 ist End-of-Life~~ | ~~Keine Sicherheitsupdates vom Projekt.~~ | Erledigt – Migration auf Spring Boot 3.4 und Java 21 ist abgeschlossen. |
+| ~~Kein Fehlerhandling / `@ControllerAdvice`~~ | ~~Unbehandelte Exceptions erzeugen Spring-Default-Fehlerseiten.~~ | Erledigt – `GlobalExceptionHandler` liefert konsistente JSON-Fehlerantworten für 400, 404 und 500. |
+| ~~Keine Persistenz~~ | ~~Zustand geht bei Neustart verloren.~~ | Erledigt – Greeting-Anfragen werden via JPA in PostgreSQL gespeichert. |
 
 ---
 
