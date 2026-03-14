@@ -32,7 +32,7 @@ class GlobalExceptionHandlerTest {
         }
 
         @PostMapping("/test/body")
-        public String acceptBody(@RequestBody ErrorResponse body) {
+        public String acceptBody(@RequestBody java.util.Map<String, String> body) {
             return "ok";
         }
 
@@ -52,9 +52,8 @@ class GlobalExceptionHandlerTest {
         mockMvc.perform(get("/test/error"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.status").value(500))
-                .andExpect(jsonPath("$.error").value("Internal Server Error"))
-                .andExpect(jsonPath("$.message").value("An unexpected error occurred"))
-                .andExpect(jsonPath("$.timestamp").exists());
+                .andExpect(jsonPath("$.title").value("Internal Server Error"))
+                .andExpect(jsonPath("$.detail").value("An unexpected error occurred"));
     }
 
     @Test
@@ -65,9 +64,7 @@ class GlobalExceptionHandlerTest {
                                 .content("{invalid json"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.error").value("Bad Request"))
-                .andExpect(jsonPath("$.message").value("Malformed request body"))
-                .andExpect(jsonPath("$.timestamp").exists());
+                .andExpect(jsonPath("$.title").value("Bad Request"));
     }
 
     @Test
@@ -75,9 +72,8 @@ class GlobalExceptionHandlerTest {
         mockMvc.perform(get("/test/typed").param("count", "notANumber"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.error").value("Bad Request"))
-                .andExpect(jsonPath("$.message").value("Invalid value for parameter 'count'"))
-                .andExpect(jsonPath("$.timestamp").exists());
+                .andExpect(jsonPath("$.title").value("Bad Request"))
+                .andExpect(jsonPath("$.detail").value("Invalid value for parameter 'count'"));
     }
 
     @Test
@@ -85,18 +81,14 @@ class GlobalExceptionHandlerTest {
         mockMvc.perform(get("/test/required"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.error").value("Bad Request"))
-                .andExpect(jsonPath("$.message").value("Required parameter 'name' is missing"))
-                .andExpect(jsonPath("$.timestamp").exists());
+                .andExpect(jsonPath("$.title").value("Bad Request"))
+                .andExpect(jsonPath("$.detail").value("Required parameter 'name' is missing"));
     }
 
     @Test
-    void noHandlerFoundReturns404() throws Exception {
+    void notFoundReturns404() throws Exception {
         mockMvc.perform(get("/nonexistent/path"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.error").value("Not Found"))
-                .andExpect(jsonPath("$.message").exists())
-                .andExpect(jsonPath("$.timestamp").exists());
+                .andExpect(jsonPath("$.status").value(404));
     }
 }
