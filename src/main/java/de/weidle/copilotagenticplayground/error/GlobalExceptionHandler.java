@@ -26,6 +26,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatusCode status,
             WebRequest request) {
+        log.warn("Missing required parameter: '{}'", ex.getParameterName());
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle("Bad Request");
         problem.setDetail("Required parameter '" + ex.getParameterName() + "' is missing");
@@ -35,6 +36,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ProblemDetail handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        log.warn("Type mismatch for parameter '{}': {}", ex.getName(), ex.getMessage());
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle("Bad Request");
         problem.setDetail("Invalid value for parameter '" + ex.getName() + "'");
