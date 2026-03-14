@@ -8,9 +8,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "greeting_log")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GreetingLogEntity {
 
     @Id
@@ -31,26 +36,8 @@ public class GreetingLogEntity {
         this.createdAt = Instant.now();
     }
 
-    protected GreetingLogEntity() {}
-
     public GreetingLogEntity(String name, String message) {
         this.name = name;
         this.message = message;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
     }
 }

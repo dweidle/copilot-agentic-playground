@@ -3,16 +3,14 @@ package de.weidle.copilotagenticplayground.greeting.application;
 import de.weidle.copilotagenticplayground.greeting.domain.model.Greeting;
 import de.weidle.copilotagenticplayground.greeting.domain.port.in.GreetUseCase;
 import de.weidle.copilotagenticplayground.greeting.domain.port.out.SaveGreetingPort;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class GreetingService implements GreetUseCase {
 
     private final SaveGreetingPort saveGreetingPort;
-
-    public GreetingService(SaveGreetingPort saveGreetingPort) {
-        this.saveGreetingPort = saveGreetingPort;
-    }
 
     @Override
     public Greeting greet(String name) {

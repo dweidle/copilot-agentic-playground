@@ -38,7 +38,7 @@ public class GreetingE2ESteps {
     @Then("the greeting message is {string}")
     public void theGreetingMessageIs(String message) {
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getMessage()).isEqualTo(message);
+        assertThat(response.getBody().message()).isEqualTo(message);
     }
 
     private String buildUrl(String path) {
