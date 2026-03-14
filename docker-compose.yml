@@ -10,5 +10,17 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
+  otel-lgtm:
+    image: grafana/otel-lgtm:0.8.1
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "3000:3000"   # Grafana UI
+    environment:
+      - ENABLE_LOGS_OTELCOL=true
+    volumes:
+      - otel-lgtm-data:/data
+
 volumes:
   postgres-data:
+  otel-lgtm-data:
