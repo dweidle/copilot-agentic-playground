@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Set project version from tag
+        run: mvn versions:set -DnewVersion=${GITHUB_REF_NAME#v} -DgenerateBackupPoms=false
+
+      - name: Build fat JAR
+        run: mvn --batch-mode clean package -DskipTests
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/*.jar
+          generate_release_notes: true
