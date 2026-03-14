@@ -3,6 +3,9 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <includeMdcKeyName>trace_id</includeMdcKeyName>
+        <includeMdcKeyName>span_id</includeMdcKeyName>
+        <includeMdcKeyName>trace_flags</includeMdcKeyName>
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
