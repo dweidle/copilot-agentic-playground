@@ -77,8 +77,8 @@ Das System speichert Greeting-Anfragen in einer PostgreSQL-Datenbank. Für die l
 
 | Entscheidung | Begründung |
 |--------------|------------|
-| Controller → Service → DTO | Klassische Schichtenarchitektur hält Controller dünn und isoliert Geschäftslogik im Service. |
-| Feature-Packages | Jedes fachliche Feature (z. B. `greeting`) wird in einem eigenen Subpackage gebündelt (Controller, Service, DTO). |
+| Hexagonale Architektur (Ports & Adapters) | Trennt Domänenlogik von technischen Adaptern. Eingehende Adapter (Web) und ausgehende Adapter (Persistenz) kommunizieren über Port-Interfaces mit der Anwendungsschicht. |
+| Feature-orientierte Hexagone | Jedes Feature (z. B. `greeting`) enthält `domain/`, `application/` und `adapter/`-Subpackages mit klarer Abhängigkeitsrichtung nach innen. |
 | Immutable DTOs mit Jackson-Annotations | `GreetingResponse` ist `final`-feldbasiert; `@JsonCreator`/`@JsonProperty` ermöglichen sowohl Serialisierung als auch Deserialisierung. |
 | Schichtspezifische Tests | `@WebMvcTest` für Controller, `@SpringBootTest` für Integration, Cucumber für E2E – jede Teststufe prüft genau ihre Ebene. |
 
@@ -92,45 +92,72 @@ Das System speichert Greeting-Anfragen in einer PostgreSQL-Datenbank. Für die l
 copilot-agentic-playground
 └── de.weidle.copilotagenticplayground
     ├── CopilotAgenticPlaygroundApplication   (Startpunkt)
-    └── greeting                              (Feature-Package)
-        ├── GreetingController                (REST-Schnittstelle)
-        ├── GreetingService                   (Geschäftslogik)
-        └── GreetingResponse                  (DTO)
+    └── greeting                              (Feature-Hexagon)
+        ├── domain/                           (Framework-frei)
+        │   ├── model/
+        │   │   └── Greeting                  (Domänenobjekt)
+        │   └── port/
+        │       ├── in/
+        │       │   └── GreetUseCase          (Input-Port)
+        │       └── out/
+        │           └── SaveGreetingPort      (Output-Port)
+        ├── application/
+        │   └── GreetingService               (Use-Case-Implementierung)
+        └── adapter/
+            ├── in/web/
+            │   ├── GreetingController        (Web-Adapter)
+            │   └── GreetingResponse          (Web-DTO)
+            └── out/persistence/
+                ├── GreetingLogEntity         (JPA-Entity)
+                ├── GreetingLogJpaRepository
+                └── GreetingLogPersistenceAdapter (Persistenz-Adapter)
 ```
 
-### Ebene 2 – Greeting-Feature
+### Ebene 2 – Greeting-Hexagon
 
 ```
-┌──────────────────────────────────────────────────────┐
-│                  greeting-Package                     │
-│                                                      │
-│  ┌────────────────────┐                              │
-│  │ GreetingController │─────▶ GET /api/greeting      │
-│  │  @RestController    │                              │
-│  └────────┬───────────┘                              │
-│           │ ruft auf (DI)                            │
-│           ▼                                          │
-│  ┌────────────────────┐     ┌───────────────────┐    │
-│  │  GreetingService   │────▶│ GreetingResponse  │    │
-│  │  @Service           │     │ (DTO, immutable)  │    │
-│  └────────┬───────────┘     └───────────────────┘    │
-│           │ persistiert                              │
-│           ▼                                          │
-│  ┌──────────────────────────┐  ┌─────────────────┐   │
-│  │ GreetingLogRepository    │─▶│  GreetingLog    │   │
-│  │ (Spring Data JPA)        │  │  (JPA-Entity)   │   │
-│  └──────────────────────────┘  └─────────────────┘   │
-│                                                      │
-└──────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                        greeting-Package                             │
+│                                                                     │
+│  ┌─ adapter/in/web ──────────────┐                                  │
+│  │  GreetingController           │──▶ GET /api/greeting             │
+│  │  GreetingResponse (DTO)       │                                  │
+│  └────────────┬──────────────────┘                                  │
+│               │ hängt ab von                                        │
+│               ▼                                                     │
+│  ┌─ domain/port/in ─────────────┐                                   │
+│  │  «interface» GreetUseCase    │                                   │
+│  └────────────┬─────────────────┘                                   │
+│               │ implementiert von                                   │
+│               ▼                                                     │
+│  ┌─ application ────────────────┐                                   │
+│  │  GreetingService (@Service)  │──▶ domain/model/Greeting          │
+│  └────────────┬─────────────────┘                                   │
+│               │ hängt ab von                                        │
+│               ▼                                                     │
+│  ┌─ domain/port/out ────────────┐                                   │
+│  │  «interface» SaveGreetingPort│                                   │
+│  └────────────┬─────────────────┘                                   │
+│               │ implementiert von                                   │
+│               ▼                                                     │
+│  ┌─ adapter/out/persistence ────────────────────────────────┐       │
+│  │  GreetingLogPersistenceAdapter  ──▶ GreetingLogEntity    │       │
+│  │                                     GreetingLogJpaRepo   │       │
+│  └──────────────────────────────────────────────────────────┘       │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 | Baustein | Verantwortung |
 |----------|---------------|
-| `GreetingController` | Nimmt HTTP-Requests entgegen, delegiert an den Service und gibt die Antwort als JSON zurück. |
-| `GreetingService` | Enthält die Geschäftslogik: Normalisiert den Namensparameter und erzeugt die Grußnachricht. |
-| `GreetingResponse` | Unveränderliches Transferobjekt mit einem `message`-Feld; Jackson-kompatibel. |
-| `GreetingLogRepository` | Spring Data JPA Repository für den Datenbankzugriff. |
-| `GreetingLog` | JPA-Entity, die eine Greeting-Anfrage in der `greeting_log`-Tabelle abbildet. |
+| `Greeting` | Reines Domänenobjekt ohne Framework-Abhängigkeiten. Repräsentiert eine Grußanfrage. |
+| `GreetUseCase` | Input-Port-Interface. Definiert den Anwendungsfall „Gruß erzeugen". |
+| `SaveGreetingPort` | Output-Port-Interface. Definiert den Vertrag zum Persistieren eines Grußes. |
+| `GreetingService` | Implementiert `GreetUseCase`, orchestriert Domänenlogik und ruft `SaveGreetingPort` auf. |
+| `GreetingController` | Web-Adapter: Nimmt HTTP-Requests entgegen, ruft `GreetUseCase` auf und gibt `GreetingResponse` als JSON zurück. |
+| `GreetingResponse` | Unveränderliches Web-DTO mit einem `message`-Feld; Jackson-kompatibel. |
+| `GreetingLogPersistenceAdapter` | Persistenz-Adapter: Implementiert `SaveGreetingPort` und speichert über `GreetingLogJpaRepository`. |
+| `GreetingLogEntity` | JPA-Entity, die eine Greeting-Anfrage in der `greeting_log`-Tabelle abbildet. |
 
 ---
 
@@ -229,7 +256,7 @@ Constructor Injection wird gegenüber Field Injection bevorzugt (siehe `Greeting
 | ID | Entscheidung | Begründung |
 |----|-------------|------------|
 | ADR-01 | Spring Boot 3.4.4 mit Java 21 | Aktuelles LTS-Release für Framework und Laufzeit. |
-| ADR-02 | Feature-Package-Struktur | Fachlich zusammengehörige Klassen (Controller, Service, DTO) liegen in einem Package, statt technisch nach Layern zu trennen. |
+| ADR-02 | Hexagonale Architektur | Die Domänenlogik ist frei von Framework-Abhängigkeiten. Adapter (Web, Persistenz) kommunizieren über Port-Interfaces mit dem Anwendungskern. |
 | ADR-03 | Cucumber für E2E statt reine Spring-Integrationstests | Gherkin-Szenarien dokumentieren das erwartete API-Verhalten in lesbarer Form und dienen gleichzeitig als ausführbare Spezifikation. |
 
 ---

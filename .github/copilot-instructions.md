@@ -14,20 +14,31 @@
 
 ## High-Level Architecture
 
-This repository is a single-module Maven Spring Boot application.
+This repository is a single-module Maven Spring Boot application that follows **hexagonal architecture** (ports and adapters).
 
-The application entry point is `de.weidle.copilotagenticplayground.CopilotAgenticPlaygroundApplication`. HTTP endpoints live under the `de.weidle.copilotagenticplayground` package tree and currently expose a small REST API at `/api/greeting`.
+The application entry point is `de.weidle.copilotagenticplayground.CopilotAgenticPlaygroundApplication`. Each feature (e.g. `greeting`) is organized into three subpackages:
 
-The current flow is controller-driven: `GreetingController` handles HTTP requests, delegates business logic to `GreetingService`, and returns a dedicated response DTO (`GreetingResponse`) that Spring serializes to JSON.
+- **`domain/`** – Pure domain model (`Greeting`) and port interfaces. The domain layer has zero framework dependencies.
+  - `model/` – Domain objects (POJOs, no Spring/JPA annotations).
+  - `port/in/` – Input port interfaces (e.g. `GreetUseCase`) that define what the application can do.
+  - `port/out/` – Output port interfaces (e.g. `SaveGreetingPort`) that define what the application needs from infrastructure.
+- **`application/`** – Use-case implementations (e.g. `GreetingService`) annotated with `@Service`. They implement input ports and depend on output ports.
+- **`adapter/`** – Technical adapters that connect the outside world to the domain.
+  - `in/web/` – Inbound web adapter (`GreetingController`, `GreetingResponse` DTO).
+  - `out/persistence/` – Outbound persistence adapter (`GreetingLogPersistenceAdapter`, `GreetingLogEntity`, `GreetingLogJpaRepository`).
 
-Greeting requests are persisted via Spring Data JPA. The `GreetingLog` entity records each greeting (name, message, timestamp) into a PostgreSQL database. Tests use Testcontainers to spin up an ephemeral PostgreSQL instance automatically.
+Adapters depend on ports, never the other way around. The dependency direction always points inward: adapters → ports → domain.
+
+The greeting flow: HTTP request → `GreetingController` (web adapter) → `GreetUseCase` (input port) → `GreetingService` (application) → `SaveGreetingPort` (output port) → `GreetingLogPersistenceAdapter` (persistence adapter) → PostgreSQL. Tests use Testcontainers to spin up an ephemeral PostgreSQL instance automatically.
 
 End-to-end coverage lives in Cucumber feature files under `src/test/resources/features`. The Cucumber suite boots the Spring application on a random port and exercises the API over HTTP via step definitions in `src/test/java/de/weidle/copilotagenticplayground/e2e`.
 
 ## Key Conventions
 
-- Keep production code under the root package `de.weidle.copilotagenticplayground` and group features by subpackage, as shown by the `greeting` feature package.
-- Keep controllers thin and push response construction or business logic into Spring-managed services.
+- Organize each feature into `domain/`, `application/`, and `adapter/` subpackages under the root package `de.weidle.copilotagenticplayground`, as shown by the `greeting` feature package.
+- Keep the domain layer free of Spring, JPA, and other framework annotations.
+- Controllers and persistence adapters depend on port interfaces, not on application services directly.
+- Keep controllers thin and push response construction or business logic into application services.
 - Expose JSON APIs under `/api/...` paths.
 - Prefer focused Spring tests that match the layer being changed: `@WebMvcTest` for controller behavior and `@SpringBootTest` for application wiring.
 - Keep Cucumber scenarios high-level and HTTP-oriented; put bootstrapping in a dedicated Cucumber Spring configuration class and keep endpoint assertions in step definitions rather than mocking the web layer.
