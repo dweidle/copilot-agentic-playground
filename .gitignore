@@ -41,3 +41,7 @@ bin/
 
 # Docker Compose
 docker-compose.override.yml
+
+# Frontend
+frontend/node_modules/
+frontend/dist/

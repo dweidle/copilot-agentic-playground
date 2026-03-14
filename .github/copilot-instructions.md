@@ -11,6 +11,11 @@
 - Check formatting with `mvn spotless:check`
 - Auto-fix formatting with `mvn spotless:apply`
 - Start a local PostgreSQL with `docker compose up -d`
+- **Frontend** (in `frontend/`):
+  - Install dependencies: `npm install`
+  - Start dev server (with proxy to backend): `npm run dev`
+  - Build production bundle: `npm run build`
+  - Type-check: `npm run tsc`
 
 ## High-Level Architecture
 
@@ -30,6 +35,8 @@ The application entry point is `de.weidle.copilotagenticplayground.CopilotAgenti
 Adapters depend on ports, never the other way around. The dependency direction always points inward: adapters → ports → domain.
 
 The greeting flow: HTTP request → `GreetingController` (web adapter) → `GreetUseCase` (input port) → `GreetingService` (application) → `SaveGreetingPort` (output port) → `GreetingLogPersistenceAdapter` (persistence adapter) → PostgreSQL. Tests use Testcontainers to spin up an ephemeral PostgreSQL instance automatically.
+
+A **React + TypeScript frontend** (`frontend/`) built with Vite communicates with the backend via `GET /api/greeting?name=`. During development the Vite dev server proxies `/api/*` to `http://localhost:8080`.
 
 End-to-end coverage lives in Cucumber feature files under `src/test/resources/features`. The Cucumber suite boots the Spring application on a random port and exercises the API over HTTP via step definitions in `src/test/java/de/weidle/copilotagenticplayground/e2e`.
 
