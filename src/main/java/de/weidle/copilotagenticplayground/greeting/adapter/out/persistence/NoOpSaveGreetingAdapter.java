@@ -2,22 +2,15 @@ package de.weidle.copilotagenticplayground.greeting.adapter.out.persistence;
 
 import de.weidle.copilotagenticplayground.greeting.domain.model.Greeting;
 import de.weidle.copilotagenticplayground.greeting.domain.port.out.SaveGreetingPort;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
-@ConditionalOnProperty(
-        name = "features.persistence.enabled",
-        havingValue = "true",
-        matchIfMissing = true)
-public class GreetingLogPersistenceAdapter implements SaveGreetingPort {
-
-    private final GreetingLogJpaRepository repository;
+@ConditionalOnProperty(name = "features.persistence.enabled", havingValue = "false")
+public class NoOpSaveGreetingAdapter implements SaveGreetingPort {
 
     @Override
     public void save(Greeting greeting) {
-        repository.save(GreetingPersistenceMapper.INSTANCE.toEntity(greeting));
+        // persistence disabled via feature flag — intentionally a no-op
     }
 }
