@@ -1,4 +1,4 @@
-package de.weidle.copilotagenticplayground.greeting;
+package de.weidle.copilotagenticplayground.greeting.adapter.in.web;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import de.weidle.copilotagenticplayground.greeting.domain.model.Greeting;
+import de.weidle.copilotagenticplayground.greeting.domain.port.in.GreetUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,11 +19,11 @@ class GreetingControllerTest {
 
     @Autowired private MockMvc mockMvc;
 
-    @MockitoBean private GreetingService greetingService;
+    @MockitoBean private GreetUseCase greetUseCase;
 
     @Test
     void returnsGreetingPayload() throws Exception {
-        given(greetingService.greet("Daniel")).willReturn(new GreetingResponse("Hello, Daniel!"));
+        given(greetUseCase.greet("Daniel")).willReturn(new Greeting("Daniel", "Hello, Daniel!"));
 
         mockMvc.perform(get("/api/greeting").param("name", "Daniel"))
                 .andExpect(status().isOk())
