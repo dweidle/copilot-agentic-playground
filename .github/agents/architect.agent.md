@@ -7,7 +7,7 @@ description: >
   implementation code — only designs, interfaces, and pseudocode.
 tools: ['read', 'search', 'fetch', 'githubRepo']
 user-invocable: true
-model: claude-opus-4-6
+model: claude-opus-4.6
 ---
 
 # Software Architect

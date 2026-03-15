@@ -8,7 +8,7 @@ description: >
   Does NOT fix issues — only identifies and classifies them with remediation guidance.
 tools: ['read', 'search', 'fetch', 'changes', 'problems']
 user-invocable: true
-model: claude-opus-4-6
+model: claude-opus-4.6
 ---
 
 # Security Reviewer

@@ -7,7 +7,7 @@ description: >
   Does NOT write tests — delegate testing to test-engineer.
 tools: ['read', 'edit', 'search', 'runCommands', 'runTasks', 'problems', 'changes', 'testFailure']
 user-invocable: true
-model: claude-sonnet-4-6
+model: claude-sonnet-4.6
 ---
 
 # Implementation Engineer

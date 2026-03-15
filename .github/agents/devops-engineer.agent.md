@@ -7,7 +7,7 @@ description: >
   and observability tooling.
 tools: ['read', 'edit', 'search', 'runCommands', 'fetch', 'githubRepo']
 user-invocable: true
-model: claude-sonnet-4-6
+model: claude-sonnet-4.6
 ---
 
 # DevOps Engineer

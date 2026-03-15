@@ -7,7 +7,7 @@ description: >
   Does NOT fix code — only reviews and provides findings.
 tools: ['read', 'search', 'changes', 'problems', 'usages']
 user-invocable: true
-model: claude-opus-4-6
+model: claude-opus-4.6
 ---
 
 # Code Reviewer

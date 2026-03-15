@@ -7,7 +7,7 @@ description: >
   Does NOT write production code — only test code.
 tools: ['read', 'edit', 'search', 'runCommands', 'runTasks', 'testFailure', 'problems']
 user-invocable: true
-model: claude-sonnet-4-6
+model: claude-sonnet-4.6
 ---
 
 # Test Engineer

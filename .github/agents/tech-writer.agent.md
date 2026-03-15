@@ -6,7 +6,7 @@ description: >
   onboarding guides, and operational runbooks. Does NOT write code — only documentation.
 tools: ['read', 'edit', 'search', 'fetch']
 user-invocable: true
-model: claude-sonnet-4-6
+model: claude-sonnet-4.6
 ---
 
 # Technical Writer

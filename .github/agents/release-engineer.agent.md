@@ -7,7 +7,7 @@ description: >
   Does NOT write production code — delegate that to implementer.
 tools: ['read', 'edit', 'search', 'runCommands', 'runSubagent', 'githubRepo', 'changes']
 user-invocable: true
-model: claude-sonnet-4-6
+model: claude-sonnet-4.6
 ---
 
 # Release Engineer

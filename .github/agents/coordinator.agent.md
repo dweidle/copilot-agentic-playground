@@ -7,7 +7,7 @@ description: >
   intervention. Handles feature development, bug fixes, refactoring, and any task
   that spans multiple concerns (design, code, tests, security, infra, docs).
 tools: ['read', 'edit', 'search', 'fetch', 'githubRepo', 'runCommands', 'runTasks', 'runSubagent', 'changes', 'problems']
-model: claude-opus-4-6
+model: claude-opus-4.6
 ---
 
 # Team Coordinator
