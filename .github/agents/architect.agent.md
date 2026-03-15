@@ -41,7 +41,7 @@ When producing architecture artifacts:
 3. **Options Considered** — at least 2-3 alternatives with pros/cons
 4. **Decision** — chosen approach with rationale
 5. **Consequences** — what follows from this decision, including risks and mitigations
-6. **Component Diagram** — describe structure in text or Mermaid format
+6. **Component Diagram** — use C4 notation in PlantUML (`.puml`) files; place diagrams under `docs/diagrams/`
 
 ## Constraints
 

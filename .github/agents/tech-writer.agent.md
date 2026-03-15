@@ -72,3 +72,5 @@ documentation for developers and stakeholders.
 - Always verify code examples compile/run before including them
 - Keep documentation close to the code it describes
 - Use diagrams sparingly — only when they clarify, not decorate
+- Use **C4 notation in PlantUML** (`.puml`) for all architecture diagrams; place files under `docs/diagrams/`
+- C4 levels: Context (L1) → Container (L2) → Component (L3); choose the right level of detail for the audience

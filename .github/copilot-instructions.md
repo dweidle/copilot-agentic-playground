@@ -51,6 +51,16 @@ End-to-end coverage lives in Cucumber feature files under `src/test/resources/fe
 - Keep Cucumber scenarios high-level and HTTP-oriented; put bootstrapping in a dedicated Cucumber Spring configuration class and keep endpoint assertions in step definitions rather than mocking the web layer.
 - Use Testcontainers with `@ServiceConnection` for database tests. Import `TestcontainersConfiguration` in any `@SpringBootTest` or Cucumber configuration class. The `@WebMvcTest` slice tests do not require a database.
 
+## Diagrams
+
+- Use **C4 notation in PlantUML** (`.puml` files) for all architecture diagrams.
+- Place diagram files under `docs/diagrams/`.
+- Choose the right C4 level for the audience:
+  - **L1 – System Context**: shows the system and its external actors/systems
+  - **L2 – Container**: shows deployable units (Spring Boot app, React SPA, PostgreSQL)
+  - **L3 – Component**: shows internal structure of a single container (adapters, ports, domain)
+- Use the [C4-PlantUML](https://github.com/plantuml-stdlib/C4-PlantUML) standard library (`!include <C4/...>`).
+
 ## Issue Workflow
 
 Every GitHub issue is implemented on a dedicated feature branch, reviewed via a Pull Request, and summarised back in the issue itself.
