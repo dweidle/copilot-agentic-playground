@@ -59,6 +59,20 @@ The project follows a **hexagonal (ports and adapters)** architecture. Dependenc
 
 ---
 
+## Architecture Diagrams
+
+Architecture is documented using [C4 notation](https://c4model.com/) in PlantUML (`.puml`). Diagrams live in [`docs/diagrams/`](docs/diagrams/).
+
+| Level | File | Description |
+|-------|------|-------------|
+| L1 – System Context | [`system-context.puml`](docs/diagrams/system-context.puml) | Shows the system and its actors — who uses it and what external systems it talks to |
+| L2 – Container | [`container.puml`](docs/diagrams/container.puml) | Deployable units: React SPA, Spring Boot App, PostgreSQL |
+| L3 – Component | [`component-greeting.puml`](docs/diagrams/component-greeting.puml) | Internal structure of the Spring Boot app — hexagonal architecture with adapters, ports, and domain |
+
+Render locally with the [PlantUML VS Code extension](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml) or the [PlantUML online server](https://www.plantuml.com/plantuml/uml/).
+
+---
+
 ## Quick Start
 
 ### Prerequisites

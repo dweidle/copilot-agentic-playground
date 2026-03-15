@@ -1,0 +1,16 @@
+@startuml system-context
+!include <C4/C4_Context.puml>
+
+title System Context – Copilot Agentic Playground
+
+Person(user, "Developer / User", "Interacts with the system via browser and REST API")
+
+System(system, "Copilot Agentic Playground", "Spring Boot + React app that demonstrates agentic patterns, stores greeting logs")
+
+SystemDb(db, "PostgreSQL", "Stores greeting log entries")
+
+Rel(user, system, "Views greetings, triggers greeting via browser or REST")
+Rel(system, db, "Persists greeting logs [JDBC/JPA]")
+
+LAYOUT_WITH_LEGEND()
+@enduml

@@ -1,0 +1,19 @@
+@startuml container
+!include <C4/C4_Container.puml>
+
+title Container Diagram – Copilot Agentic Playground
+
+Person(user, "Developer / User", "Interacts with the system via browser and REST API")
+
+System_Boundary(playground, "Copilot Agentic Playground") {
+    Container(spa, "React SPA", "TypeScript + React, Vite", "Runs in the user's browser. Renders the greeting UI.")
+    Container(app, "Spring Boot App", "Java 21, Spring Boot 4", "Hexagonal architecture. Serves the REST API and static assets.")
+    ContainerDb(db, "PostgreSQL", "PostgreSQL", "Stores greeting log entries.")
+}
+
+Rel(user, spa, "Uses", "HTTPS")
+Rel(spa, app, "GET /api/greeting?name=", "JSON/HTTP")
+Rel(app, db, "Reads/writes greeting logs", "JDBC/JPA")
+
+LAYOUT_WITH_LEGEND()
+@enduml

@@ -1,0 +1,38 @@
+@startuml component-greeting
+!include <C4/C4_Component.puml>
+
+title Component Diagram – Greeting Feature (Spring Boot App)
+
+Person(reactSpa, "React SPA / API Client", "Browser-based front-end or any HTTP client")
+ContainerDb(postgres, "PostgreSQL", "Relational Database", "Persists greeting log entries")
+
+Container_Boundary(springBoot, "Spring Boot App") {
+
+    Boundary(adapterIn, "adapter/in/web") {
+        Component(greetingController, "GreetingController", "Spring MVC REST Controller", "Handles GET /api/greeting")
+    }
+
+    Boundary(application, "application") {
+        Component(greetingService, "GreetingService", "Spring Service", "Implements GreetUseCase; orchestrates greeting logic")
+    }
+
+    Boundary(domainPort, "domain/port") {
+        Component(greetUseCase, "GreetUseCase", "Input Port (Interface)", "Defines the greet(name) use-case contract")
+        Component(saveGreetingPort, "SaveGreetingPort", "Output Port (Interface)", "Defines the save(greeting) persistence contract")
+    }
+
+    Boundary(adapterOut, "adapter/out/persistence") {
+        Component(greetingLogPersistenceAdapter, "GreetingLogPersistenceAdapter", "Spring Component", "Implements SaveGreetingPort; uses Spring Data JPA")
+    }
+
+}
+
+Rel(reactSpa, greetingController, "GET /api/greeting?name=", "HTTP/JSON")
+Rel(greetingController, greetUseCase, "greet(name)", "calls port")
+Rel(greetUseCase, greetingService, "implements")
+Rel(greetingService, saveGreetingPort, "save(greeting)", "calls port")
+Rel(saveGreetingPort, greetingLogPersistenceAdapter, "implements")
+Rel(greetingLogPersistenceAdapter, postgres, "INSERT greeting_log", "JPA")
+
+LAYOUT_WITH_LEGEND()
+@enduml
