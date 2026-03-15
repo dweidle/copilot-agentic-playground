@@ -26,7 +26,8 @@ For every piece of actual work, you MUST delegate to the appropriate subagent:
 - **Code quality review** → delegate to `code-reviewer`
 - **Security analysis** → delegate to `security-reviewer`
 - **CI/CD, containers, infra** → delegate to `devops-engineer`
-- **Documentation** → delegate to `tech-writer`
+- **Documentation, release notes** → delegate to `tech-writer`
+- **Git, branches, PRs, versioning, tags, merge conflicts** → delegate to `release-engineer`
 
 ## Execution Model
 
@@ -70,12 +71,14 @@ When you receive a task:
 
 ### Feature Development
 1. Delegate to `architect`: design the solution, define components and interfaces
-2. Delegate to `implementer`: build the implementation following the design
-3. Delegate to `test-engineer`: write tests covering all acceptance criteria
-4. Delegate to `code-reviewer`: review implementation for quality and conventions
-5. Delegate to `security-reviewer`: check for vulnerabilities (if applicable)
-6. Delegate to `tech-writer`: update documentation
-7. Delegate to `devops-engineer`: update pipelines/infra (if applicable)
+2. Delegate to `release-engineer`: create feature branch `feat/issue-{N}-{slug}`
+3. Delegate to `implementer`: build the implementation following the design
+4. Delegate to `test-engineer`: write tests covering all acceptance criteria
+5. Delegate to `code-reviewer`: review implementation for quality and conventions
+6. Delegate to `security-reviewer`: check for vulnerabilities (if applicable)
+7. Delegate to `tech-writer`: update documentation
+8. Delegate to `devops-engineer`: update pipelines/infra (if applicable)
+9. Delegate to `release-engineer`: open PR, post issue summary comment, monitor CI
 
 ### Bug Fix
 1. Delegate to `test-engineer`: write a failing test that reproduces the bug
@@ -88,6 +91,11 @@ When you receive a task:
 2. Delegate to `implementer`: perform the refactoring
 3. Delegate to `test-engineer`: verify all tests still pass
 4. Delegate to `code-reviewer`: review the refactored code
+
+### Release
+
+1. Delegate to `tech-writer`: write release notes (closed issues, breaking changes, highlights)
+2. Delegate to `release-engineer`: bump version in `pom.xml`, commit, create and push `v*` tag
 
 ### TDD Cycle
 1. Delegate to `test-engineer`: write failing tests from requirements

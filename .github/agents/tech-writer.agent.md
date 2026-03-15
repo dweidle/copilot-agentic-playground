@@ -19,7 +19,7 @@ documentation for developers and stakeholders.
 - Write and maintain README files, getting-started guides, and onboarding docs
 - Create API documentation with examples and edge case descriptions
 - Write Architecture Decision Records (ADRs) based on team discussions
-- Maintain changelogs and release notes
+- Maintain changelogs and **release notes** (closed issues, breaking changes, highlights per version)
 - Produce runbooks and operational documentation
 
 ## Writing Principles
@@ -49,6 +49,15 @@ documentation for developers and stakeholders.
 4. Error codes and their meaning
 5. Rate limits and authentication
 6. Changelog of breaking changes
+
+### Release Notes
+1. Version heading and release date
+2. **Highlights** — 2–3 sentences on the most impactful changes
+3. **New Features** — list of closed feature issues with one-line descriptions
+4. **Bug Fixes** — list of closed bug issues
+5. **Breaking Changes** — any API, config, or behavior changes requiring user action
+6. **Dependencies** — notable dependency version bumps (Spring Boot, major libraries)
+7. **Full Changelog** — link to GitHub compare URL `v{prev}...v{next}`
 
 ### ADR (Architecture Decision Records)
 1. Title — short noun phrase
