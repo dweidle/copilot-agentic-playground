@@ -51,6 +51,48 @@ End-to-end coverage lives in Cucumber feature files under `src/test/resources/fe
 - Keep Cucumber scenarios high-level and HTTP-oriented; put bootstrapping in a dedicated Cucumber Spring configuration class and keep endpoint assertions in step definitions rather than mocking the web layer.
 - Use Testcontainers with `@ServiceConnection` for database tests. Import `TestcontainersConfiguration` in any `@SpringBootTest` or Cucumber configuration class. The `@WebMvcTest` slice tests do not require a database.
 
+## Issue Workflow
+
+Every GitHub issue is implemented on a dedicated feature branch, reviewed via a Pull Request, and summarised back in the issue itself.
+
+### Step-by-step
+
+1. **Create a feature branch** before touching any code:
+   ```
+   git checkout -b feat/issue-{N}-{short-slug}
+   ```
+   Example: `feat/issue-9-release-notes`
+
+2. **Implement** the issue on that branch following all coding conventions below.
+
+3. **Commit** with `Closes #N` in the commit body so GitHub links the PR automatically:
+   ```
+   feat(scope): short subject
+
+   Longer description of what was done and why.
+
+   Closes #N
+
+   Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+   ```
+
+4. **Push** the branch and open a PR:
+   ```bash
+   git push -u origin feat/issue-{N}-{short-slug}
+   bash scripts/open-issue-pr.sh {N} "PR title" "PR body"
+   ```
+   `scripts/open-issue-pr.sh` requires the `gh` CLI to be installed and authenticated (`gh auth login`).
+
+5. **Post a summary comment** on the issue using `scripts/open-issue-pr.sh` (the script does this automatically after opening the PR).
+
+### Branch naming
+
+| Type | Pattern | Example |
+|------|---------|---------|
+| Feature / story | `feat/issue-{N}-{slug}` | `feat/issue-9-release-notes` |
+| Bug fix | `fix/issue-{N}-{slug}` | `fix/issue-12-null-greeting` |
+| Chore / docs | `chore/issue-{N}-{slug}` | `chore/issue-7-update-readme` |
+
 ## Git Workflow
 
 - **Commit automatically** whenever a logical unit of work is complete (e.g. after adding a feature, fixing a bug, updating config, or refactoring). Do not batch unrelated changes into one commit.
