@@ -34,6 +34,15 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Override Spring Boot JUnit Platform 1.11.x to 1.12.x, required by
+                 cucumber-junit-platform-engine 7.22+ (introduces DiscoveryIssueReporter). -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.12.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -63,6 +72,20 @@
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!--
+          opentelemetry-instrumentation-api-incubator is no longer pulled in
+          transitively by opentelemetry-spring-boot-starter in 2.26.0, but
+          DataSourcePostProcessor references DeclarativeConfigUtil from this
+          artifact at runtime. Declare it explicitly so the JDBC instrumentation
+          post-processor can find the class on the classpath.
+        -->
+        <dependency>
+            <groupId>io.opentelemetry.instrumentation</groupId>
+            <artifactId>opentelemetry-instrumentation-api-incubator</artifactId>
+            <version>2.26.0-alpha</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
