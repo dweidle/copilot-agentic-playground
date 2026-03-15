@@ -114,3 +114,30 @@ Every GitHub issue is implemented on a dedicated feature branch, reviewed via a 
 - The `CI` workflow (`.github/workflows/ci.yml`) runs `mvn verify` on every push and PR to `main`. This includes Spotless formatting checks and all tests.
 - The `Release` workflow (`.github/workflows/release.yml`) triggers on `v*` tags, sets the Maven version from the tag, builds the fat JAR, and publishes it as a GitHub Release.
 - Dependabot is configured to keep Maven dependencies and GitHub Actions versions up to date weekly.
+
+## PR Health Checks
+
+When checking the status of open PRs, **always check both CI and merge conflicts** together:
+
+```bash
+gh pr list --json number,title,mergeable,mergeStateStatus,statusCheckRollup \
+  | python3 -c "
+import sys, json
+prs = json.load(sys.stdin)
+for pr in sorted(prs, key=lambda p: p['number']):
+    checks = pr.get('statusCheckRollup', [])
+    ci = checks[0]['conclusion'] if checks else 'pending'
+    ci_icon = '✅' if ci == 'SUCCESS' else ('🔄' if not checks else '❌')
+    mergeable = pr.get('mergeable', 'UNKNOWN')
+    merge_icon = '⚠️ CONFLICT' if mergeable == 'CONFLICTING' else ('✅' if mergeable == 'MERGEABLE' else '❓')
+    print(f'PR #{pr[\"number\"]}: CI={ci_icon} | merge={merge_icon} | {pr[\"title\"][:60]}')
+"
+```
+
+### Resolving merge conflicts
+
+When a PR shows `mergeable=CONFLICTING`:
+
+1. Determine what the PR's **unique net change** is vs. current `main` (use `git diff origin/main...origin/<branch>`)
+2. Check if any of those changes are **already in main** — if so, the PR may be **superseded** and should be closed with `gh pr close <N> --comment "Superseded by ..."`)
+3. If the PR still has value, create a fresh branch from `main`, apply only the unique changes, run `mvn --batch-mode verify` locally (tests must pass), then force-push to the PR branch
