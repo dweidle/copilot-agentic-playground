@@ -9,6 +9,7 @@ export function GreetingForm() {
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [shaking, setShaking] = useState(false)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -27,6 +28,7 @@ export function GreetingForm() {
 
       const data: GreetingResponse = await res.json()
       setMessage(data.message)
+      setShaking(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unexpected error')
     } finally {
@@ -35,7 +37,7 @@ export function GreetingForm() {
   }
 
   return (
-    <div className="greeting-form">
+    <div className={`greeting-form${shaking ? ' shake' : ''}`} onAnimationEnd={() => setShaking(false)}>
       <h1>Greeting Service</h1>
       <form onSubmit={handleSubmit}>
         <div className="input-row">

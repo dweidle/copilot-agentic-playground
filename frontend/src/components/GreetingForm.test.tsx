@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { GreetingForm } from './GreetingForm'
@@ -60,7 +60,7 @@ describe('GreetingForm', () => {
   it('should show the greeting message when a name is submitted', async () => {
     // ARRANGE
     const user = userEvent.setup()
-    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hello, Daniel!' }))
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hello, Daniel! 👋' }))
     render(<GreetingForm />)
 
     // ACT
@@ -69,7 +69,7 @@ describe('GreetingForm', () => {
 
     // ASSERT
     const result = await screen.findByRole('status')
-    expect(result).toHaveTextContent('Hello, Daniel!')
+    expect(result).toHaveTextContent('Hello, Daniel! 👋')
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
@@ -156,5 +156,52 @@ describe('GreetingForm', () => {
     const alert = await screen.findByRole('alert')
     expect(alert).toHaveTextContent('Network error')
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
+  })
+
+  // -------------------------------------------------------------------------
+  // 7. Applies shake class after a successful greeting
+  // -------------------------------------------------------------------------
+  it('should apply the shake class to the greeting-form div after a successful greeting', async () => {
+    // ARRANGE
+    const user = userEvent.setup()
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hello, Daniel! 👋' }))
+    render(<GreetingForm />)
+
+    // ACT
+    await user.type(screen.getByRole('textbox', { name: /name/i }), 'Daniel')
+    await user.click(screen.getByRole('button', { name: /greet/i }))
+
+    // ASSERT — shake class is added once the greeting arrives
+    const form = await screen.findByRole('status')
+    const container = form.closest('.greeting-form')
+    await waitFor(() => {
+      expect(container).toHaveClass('shake')
+    })
+  })
+
+  // -------------------------------------------------------------------------
+  // 8. Removes shake class after onAnimationEnd fires
+  // -------------------------------------------------------------------------
+  it('should remove the shake class after the animation ends', async () => {
+    // ARRANGE
+    const user = userEvent.setup()
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hello, Daniel! 👋' }))
+    const { container } = render(<GreetingForm />)
+
+    // ACT
+    await user.type(screen.getByRole('textbox', { name: /name/i }), 'Daniel')
+    await user.click(screen.getByRole('button', { name: /greet/i }))
+
+    // Wait for the shake class to appear first
+    const greetingDiv = container.querySelector('.greeting-form')!
+    await waitFor(() => expect(greetingDiv).toHaveClass('shake'))
+
+    // Simulate the animation ending
+    await act(async () => {
+      fireEvent.animationEnd(greetingDiv, { bubbles: true })
+    })
+
+    // ASSERT — shake class is removed after the animation ends
+    await waitFor(() => expect(greetingDiv).not.toHaveClass('shake'))
   })
 })
