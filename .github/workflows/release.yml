@@ -26,10 +26,12 @@ jobs:
             "https://github.com/orhun/git-cliff/releases/download/v2.8.0/git-cliff-2.8.0-x86_64-unknown-linux-gnu.tar.gz" \
             | tar -xz -C /tmp
 
-          chmod +x /tmp/git-cliff-2.8.0-x86_64-unknown-linux-gnu/git-cliff
+          # Locate the binary regardless of archive layout
+          GIT_CLIFF=$(find /tmp -name 'git-cliff' -type f | head -1)
+          chmod +x "$GIT_CLIFF"
 
           # Generate CHANGELOG.md from full history (all tags included)
-          /tmp/git-cliff-2.8.0-x86_64-unknown-linux-gnu/git-cliff \
+          "$GIT_CLIFF" \
             --config cliff.toml \
             --verbose \
             --output CHANGELOG.md
