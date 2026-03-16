@@ -23,11 +23,11 @@ class GreetingControllerTest {
 
     @Test
     void returnsGreetingPayload() throws Exception {
-        given(greetUseCase.greet("Daniel")).willReturn(new Greeting("Daniel", "Hello, Daniel!"));
+        given(greetUseCase.greet("Daniel")).willReturn(new Greeting("Daniel", "Hello, Daniel! 👋"));
 
         mockMvc.perform(get("/api/greeting").param("name", "Daniel"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.message").value("Hello, Daniel!"));
+                .andExpect(jsonPath("$.message").value("Hello, Daniel! 👋"));
     }
 }

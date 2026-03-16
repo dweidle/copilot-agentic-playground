@@ -19,7 +19,7 @@ public class GreetingService implements GreetUseCase {
         log.trace("greet() called with name='{}'", name);
         String normalized = (name == null || name.isBlank()) ? "World" : name.trim();
         log.debug("Normalized name: '{}'", normalized);
-        Greeting greeting = new Greeting(normalized, "Hello, " + normalized + "!");
+        Greeting greeting = new Greeting(normalized, "Hello, " + normalized + "! 👋");
         log.info("Greeting created for '{}'", normalized);
         saveGreetingPort.save(greeting);
         log.debug("Greeting persisted for '{}'", normalized);
