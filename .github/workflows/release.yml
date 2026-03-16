@@ -64,24 +64,6 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: bash scripts/generate-release-notes.sh
 
-      - name: Install Pandoc and PDF toolchain
-        run: |
-          sudo apt-get update -q
-          sudo apt-get install -y --no-install-recommends \
-            pandoc \
-            lmodern \
-            texlive-latex-base \
-            texlive-fonts-recommended \
-            texlive-latex-recommended
-
-      - name: Convert release notes to PDF
-        run: |
-          pandoc release-notes.md \
-            --pdf-engine=pdflatex \
-            -V geometry:margin=2cm \
-            -V colorlinks=true \
-            -o release-notes.pdf
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -89,4 +71,3 @@ jobs:
           files: |
             target/*.jar
             release-notes.md
-            release-notes.pdf
