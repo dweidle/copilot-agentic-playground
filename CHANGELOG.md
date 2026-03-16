@@ -31,6 +31,9 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 - Locate git-cliff binary via find after tar extraction ([`7717d3d`](https://github.com/dweidle/copilot-agentic-playground/commit/7717d3d87440d21f1602f81ab3d7e28f4cee0dc4))
 
 
+- Add lmodern package for PDF generation ([`527e66c`](https://github.com/dweidle/copilot-agentic-playground/commit/527e66ce38dfb84f84730d533a09213860b62a9e))
+
+
 
 ### Documentation
 
@@ -56,6 +59,9 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 
 - Add C4 PlantUML architecture diagrams ([`7ccc4cc`](https://github.com/dweidle/copilot-agentic-playground/commit/7ccc4cc30c9f10f6bd1170da2b8554775f35151e))
+
+
+- Update for v0.1.0 [skip ci] ([`ce0231c`](https://github.com/dweidle/copilot-agentic-playground/commit/ce0231cf5e63b49a9c5de718751fa1085a1b2b3a))
 
 
 
