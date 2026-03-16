@@ -34,6 +34,9 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 - Add lmodern package for PDF generation ([`527e66c`](https://github.com/dweidle/copilot-agentic-playground/commit/527e66ce38dfb84f84730d533a09213860b62a9e))
 
 
+- Remove PDF generation, release notes from CHANGELOG.md are sufficient ([`3f90b86`](https://github.com/dweidle/copilot-agentic-playground/commit/3f90b869519471f71f81a3211654b306f9dfe695))
+
+
 
 ### Documentation
 
@@ -62,6 +65,9 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 
 - Update for v0.1.0 [skip ci] ([`ce0231c`](https://github.com/dweidle/copilot-agentic-playground/commit/ce0231cf5e63b49a9c5de718751fa1085a1b2b3a))
+
+
+- Update for v0.1.0 [skip ci] ([`fd96a85`](https://github.com/dweidle/copilot-agentic-playground/commit/fd96a854b3b3a5bfc8a1023d8b672342c510f411))
 
 
 
