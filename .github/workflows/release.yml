@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -12,6 +12,7 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     steps:
       - name: Checkout code
@@ -19,29 +20,45 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Compute next minor version and create tag
+        id: version
+        run: |
+          LATEST=$(git tag -l 'v[0-9]*' | sort -V | tail -1)
+          if [ -z "$LATEST" ]; then
+            LATEST="v0.0.0"
+          fi
+          MAJOR=$(echo "$LATEST" | sed 's/v\([0-9]*\)\.[0-9]*\.[0-9]*/\1/')
+          MINOR=$(echo "$LATEST" | sed 's/v[0-9]*\.\([0-9]*\)\.[0-9]*/\1/')
+          NEW_MINOR=$((MINOR + 1))
+          NEW_TAG="v${MAJOR}.${NEW_MINOR}.0"
+          NEW_VERSION="${MAJOR}.${NEW_MINOR}.0"
+          echo "tag=$NEW_TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$NEW_TAG" -m "Release $NEW_TAG"
+          git push origin "$NEW_TAG"
+
       - name: Generate and commit CHANGELOG.md to main
         run: |
-          # Download git-cliff v2.8.0 (pinned, x86_64 Linux)
           curl -sSfL \
             "https://github.com/orhun/git-cliff/releases/download/v2.8.0/git-cliff-2.8.0-x86_64-unknown-linux-gnu.tar.gz" \
             | tar -xz -C /tmp
 
-          # Locate the binary regardless of archive layout
           GIT_CLIFF=$(find /tmp -name 'git-cliff' -type f | head -1)
           chmod +x "$GIT_CLIFF"
 
-          # Generate CHANGELOG.md from full history (all tags included)
           "$GIT_CLIFF" \
             --config cliff.toml \
             --verbose \
             --output CHANGELOG.md
 
-          # Commit and push to main (we are on a detached HEAD at the tag)
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add CHANGELOG.md
           git diff --staged --quiet || \
-            git commit -m "docs(changelog): update for ${{ github.ref_name }} [skip ci]"
+            git commit -m "docs(changelog): update for ${{ steps.version.outputs.tag }} [skip ci]"
           git push origin HEAD:main
 
       - name: Set up Java 21 (Temurin)
@@ -52,7 +69,7 @@ jobs:
           cache: maven
 
       - name: Set project version from tag
-        run: mvn versions:set -DnewVersion=${GITHUB_REF_NAME#v} -DgenerateBackupPoms=false
+        run: mvn versions:set -DnewVersion=${{ steps.version.outputs.version }} -DgenerateBackupPoms=false
 
       - name: Build and test
         run: mvn --batch-mode clean verify
@@ -61,12 +78,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          TAG: ${{ github.ref_name }}
+          TAG: ${{ steps.version.outputs.tag }}
         run: bash scripts/generate-release-notes.sh
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.version.outputs.tag }}
           body_path: release-notes.md
           files: |
             target/*.jar
