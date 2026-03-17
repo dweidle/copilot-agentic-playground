@@ -6,6 +6,29 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
+## [0.2.0] - 2026-03-17
+
+### Documentation
+
+- Update for v0.1.0 [skip ci] ([`135304a`](https://github.com/dweidle/copilot-agentic-playground/commit/135304a4fde61fc2d186fc961fcb37c366cc3f16))
+
+
+
+### Features
+
+- Add random multilingual greeting with flag display (#14) ([`7d156f2`](https://github.com/dweidle/copilot-agentic-playground/commit/7d156f2277c08c028c4ea3e7981bb97b5a1f63a3))
+
+
+
+### Maintenance
+
+- Trigger automatically on main push with auto minor version bump ([`b48fa68`](https://github.com/dweidle/copilot-agentic-playground/commit/b48fa68c59320f24a9bd1a95b344337ca2e73bf3))
+
+
+- Verify auto-release trigger on main push ([`a0a2f6d`](https://github.com/dweidle/copilot-agentic-playground/commit/a0a2f6d8e4032eabdeea0b2806c3967279a085f9))
+
+
+
 ## [0.1.0] - 2026-03-16
 
 ### Bug Fixes
