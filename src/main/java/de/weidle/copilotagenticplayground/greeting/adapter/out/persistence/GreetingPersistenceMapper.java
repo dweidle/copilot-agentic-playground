@@ -12,5 +12,8 @@ public interface GreetingPersistenceMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "name", source = "name")
+    @Mapping(target = "message", source = "message")
+    // language field from Greeting is intentionally not stored in the DB
     GreetingLogEntity toEntity(Greeting greeting);
 }

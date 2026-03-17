@@ -35,10 +35,12 @@ public class GreetingE2ESteps {
         assertThat(response.getStatusCode().value()).isEqualTo(statusCode);
     }
 
-    @Then("the greeting message is {string}")
-    public void theGreetingMessageIs(String message) {
+    @Then("the response contains a greeting message and language")
+    public void theResponseContainsAGreetingMessageAndLanguage() {
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().message()).isEqualTo(message);
+        assertThat(response.getBody().message()).isNotBlank();
+        assertThat(response.getBody().language()).isNotBlank();
+        assertThat(response.getBody().flag()).isNotBlank();
     }
 
     private String buildUrl(String path) {

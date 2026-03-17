@@ -135,3 +135,17 @@ button:disabled {
 .shake {
   animation: shake 0.6s ease-in-out;
 }
+
+.flag-display {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+  vertical-align: middle;
+}
+
+.bw-wappen {
+  height: 1.5rem;
+  width: auto;
+  vertical-align: middle;
+}

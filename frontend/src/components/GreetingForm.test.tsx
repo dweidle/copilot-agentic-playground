@@ -204,4 +204,32 @@ describe('GreetingForm', () => {
     // ASSERT — shake class is removed after the animation ends
     await waitFor(() => expect(greetingDiv).not.toHaveClass('shake'))
   })
+
+  // -------------------------------------------------------------------------
+  // 9. Displays flag emoji for a standard language
+  // -------------------------------------------------------------------------
+  it('should display the flag emoji for a standard language', async () => {
+    const user = userEvent.setup()
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hallo, Daniel! 👋', language: 'Deutsch', flag: '🇩🇪' }))
+    render(<GreetingForm />)
+    await user.type(screen.getByRole('textbox', { name: /name/i }), 'Daniel')
+    await user.click(screen.getByRole('button', { name: /greet/i }))
+    await screen.findByRole('status')
+    expect(screen.getByRole('img', { name: 'Deutsch' })).toBeInTheDocument()
+  })
+
+  // -------------------------------------------------------------------------
+  // 10. Displays BW Wappen image for Schwäbisch
+  // -------------------------------------------------------------------------
+  it('should display BW Wappen image for Schwäbisch', async () => {
+    const user = userEvent.setup()
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Grüaß di, Daniel! 👋', language: 'Schwäbisch', flag: 'bw' }))
+    render(<GreetingForm />)
+    await user.type(screen.getByRole('textbox', { name: /name/i }), 'Daniel')
+    await user.click(screen.getByRole('button', { name: /greet/i }))
+    await screen.findByRole('status')
+    const img = screen.getByAltText('Baden-Württemberg')
+    expect(img).toBeInTheDocument()
+    expect(img).toHaveAttribute('src', expect.stringContaining('Baden-W'))
+  })
 })
