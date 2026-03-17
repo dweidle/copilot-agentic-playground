@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import de.weidle.copilotagenticplayground.greeting.domain.model.Greeting;
+import de.weidle.copilotagenticplayground.greeting.domain.model.Language;
 import de.weidle.copilotagenticplayground.greeting.domain.port.in.GreetUseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,14 @@ class GreetingControllerTest {
 
     @Test
     void returnsGreetingPayload() throws Exception {
-        given(greetUseCase.greet("Daniel")).willReturn(new Greeting("Daniel", "Hello, Daniel! 👋"));
+        given(greetUseCase.greet("Daniel"))
+                .willReturn(new Greeting("Daniel", "Hallo, Daniel! 👋", Language.GERMAN));
 
         mockMvc.perform(get("/api/greeting").param("name", "Daniel"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.message").value("Hello, Daniel! 👋"));
+                .andExpect(jsonPath("$.message").value("Hallo, Daniel! 👋"))
+                .andExpect(jsonPath("$.language").value("Deutsch"))
+                .andExpect(jsonPath("$.flag").value("🇩🇪"));
     }
 }

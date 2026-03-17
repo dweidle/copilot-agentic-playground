@@ -11,5 +11,7 @@ public interface GreetingWebMapper {
     GreetingWebMapper INSTANCE = Mappers.getMapper(GreetingWebMapper.class);
 
     @Mapping(source = "message", target = "message")
+    @Mapping(source = "language.displayName", target = "language")
+    @Mapping(source = "language.flag", target = "flag")
     GreetingResponse toResponse(Greeting greeting);
 }
