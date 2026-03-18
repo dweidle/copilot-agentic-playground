@@ -6,6 +6,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
+## [0.3.0] - 2026-03-18
+
+### Documentation
+
+- Update for v0.2.0 [skip ci] ([`6f67d16`](https://github.com/dweidle/copilot-agentic-playground/commit/6f67d16dac56ac42d726bb43de1d0e447286821e))
+
+
+
+### Features
+
+- Add product-owner agent for issue refinement ([`5eba091`](https://github.com/dweidle/copilot-agentic-playground/commit/5eba09110c186d328be1ca58614ab8ef40516820))
+
+
+
 ## [0.2.0] - 2026-03-17
 
 ### Documentation
