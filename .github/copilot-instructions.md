@@ -65,6 +65,14 @@ End-to-end coverage lives in Cucumber feature files under `src/test/resources/fe
 
 Every GitHub issue is implemented on a dedicated feature branch, reviewed via a Pull Request, and summarised back in the issue itself.
 
+### Refinement (before implementation)
+
+Before implementing, issues should be refined by the `product-owner` agent:
+- Invoke with: `@product-owner refine issue #N`
+- The agent enriches the issue body with User Story format, Acceptance Criteria, Scope, and Technical Notes
+- It posts a bullet-point summary of changes as an issue comment (audit trail)
+- Only start implementation once the issue is marked **Ready for Development**
+
 ### Step-by-step
 
 1. **Create a feature branch** before touching any code:
