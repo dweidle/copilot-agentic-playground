@@ -6,6 +6,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
+## [0.4.0] - 2026-03-18
+
+### Documentation
+
+- Update for v0.3.0 [skip ci] ([`8042d99`](https://github.com/dweidle/copilot-agentic-playground/commit/8042d998573d0e6790111764bd2af990628e805a))
+
+
+
+### Features
+
+- Product-owner triggers architect/security/test-engineer validation ([`ca5df2e`](https://github.com/dweidle/copilot-agentic-playground/commit/ca5df2e65b73ea657e99e9bb1aabf873005295b9))
+
+
+
 ## [0.3.0] - 2026-03-18
 
 ### Documentation
