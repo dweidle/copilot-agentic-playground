@@ -6,6 +6,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
+## [0.5.0] - 2026-03-23
+
+### Documentation
+
+- Update for v0.4.0 [skip ci] ([`d7d0d5f`](https://github.com/dweidle/copilot-agentic-playground/commit/d7d0d5f319617245d71565ff9c4fae18490c9c53))
+
+
+
+### Features
+
+- Add random German joke to greeting response (#16) ([`5f92478`](https://github.com/dweidle/copilot-agentic-playground/commit/5f92478481c0d29348f3467e10c6f9007dd6414f))
+
+
+
 ## [0.4.0] - 2026-03-18
 
 ### Documentation
