@@ -4,6 +4,7 @@ interface GreetingResponse {
   message: string
   language: string
   flag: string
+  joke: string
 }
 
 export function GreetingForm() {
@@ -11,6 +12,7 @@ export function GreetingForm() {
   const [message, setMessage] = useState<string | null>(null)
   const [flag, setFlag] = useState<string | null>(null)
   const [language, setLanguage] = useState<string | null>(null)
+  const [joke, setJoke] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [shaking, setShaking] = useState(false)
@@ -22,6 +24,7 @@ export function GreetingForm() {
     setMessage(null)
     setFlag(null)
     setLanguage(null)
+    setJoke(null)
 
     try {
       const params = name.trim() ? `?name=${encodeURIComponent(name.trim())}` : ''
@@ -36,6 +39,7 @@ export function GreetingForm() {
       setMessage(data.message)
       setFlag(data.flag)
       setLanguage(data.language)
+      setJoke(data.joke ?? null)
       setShaking(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unexpected error')
@@ -77,6 +81,7 @@ export function GreetingForm() {
             )}
           </span>
           {message}
+          {joke && <p className="joke" data-testid="joke">{joke}</p>}
         </div>
       )}
 

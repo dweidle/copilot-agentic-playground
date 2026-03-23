@@ -13,5 +13,6 @@ public interface GreetingWebMapper {
     @Mapping(source = "message", target = "message")
     @Mapping(source = "language.displayName", target = "language")
     @Mapping(source = "language.flag", target = "flag")
+    @Mapping(target = "joke", ignore = true)
     GreetingResponse toResponse(Greeting greeting);
 }

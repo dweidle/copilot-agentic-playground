@@ -21,17 +21,20 @@ class GreetingControllerTest {
     @Autowired private MockMvc mockMvc;
 
     @MockitoBean private GreetUseCase greetUseCase;
+    @MockitoBean private JokeProvider jokeProvider;
 
     @Test
     void returnsGreetingPayload() throws Exception {
         given(greetUseCase.greet("Daniel"))
                 .willReturn(new Greeting("Daniel", "Hallo, Daniel! 👋", Language.GERMAN));
+        given(jokeProvider.randomJoke()).willReturn("Test Witz");
 
         mockMvc.perform(get("/api/greeting").param("name", "Daniel"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.message").value("Hallo, Daniel! 👋"))
                 .andExpect(jsonPath("$.language").value("Deutsch"))
-                .andExpect(jsonPath("$.flag").value("🇩🇪"));
+                .andExpect(jsonPath("$.flag").value("🇩🇪"))
+                .andExpect(jsonPath("$.joke").value("Test Witz"));
     }
 }

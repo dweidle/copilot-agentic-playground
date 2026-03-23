@@ -60,7 +60,7 @@ describe('GreetingForm', () => {
   it('should show the greeting message when a name is submitted', async () => {
     // ARRANGE
     const user = userEvent.setup()
-    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hello, Daniel! 👋' }))
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hello, Daniel! 👋', language: 'English', flag: '🇬🇧', joke: 'Test-Witz' }))
     render(<GreetingForm />)
 
     // ACT
@@ -79,7 +79,7 @@ describe('GreetingForm', () => {
   it('should call fetch without a name param and show default greeting when input is empty', async () => {
     // ARRANGE
     const user = userEvent.setup()
-    const fetchMock = mockFetchOk({ message: 'Hello, World!' })
+    const fetchMock = mockFetchOk({ message: 'Hello, World!', language: 'English', flag: '🇬🇧', joke: 'Test-Witz' })
     vi.stubGlobal('fetch', fetchMock)
     render(<GreetingForm />)
 
@@ -164,7 +164,7 @@ describe('GreetingForm', () => {
   it('should apply the shake class to the greeting-form div after a successful greeting', async () => {
     // ARRANGE
     const user = userEvent.setup()
-    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hello, Daniel! 👋' }))
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hello, Daniel! 👋', language: 'English', flag: '🇬🇧', joke: 'Test-Witz' }))
     render(<GreetingForm />)
 
     // ACT
@@ -185,7 +185,7 @@ describe('GreetingForm', () => {
   it('should remove the shake class after the animation ends', async () => {
     // ARRANGE
     const user = userEvent.setup()
-    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hello, Daniel! 👋' }))
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hello, Daniel! 👋', language: 'English', flag: '🇬🇧', joke: 'Test-Witz' }))
     const { container } = render(<GreetingForm />)
 
     // ACT
@@ -210,7 +210,7 @@ describe('GreetingForm', () => {
   // -------------------------------------------------------------------------
   it('should display the flag emoji for a standard language', async () => {
     const user = userEvent.setup()
-    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hallo, Daniel! 👋', language: 'Deutsch', flag: '🇩🇪' }))
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hallo, Daniel! 👋', language: 'Deutsch', flag: '🇩🇪', joke: 'Test-Witz' }))
     render(<GreetingForm />)
     await user.type(screen.getByRole('textbox', { name: /name/i }), 'Daniel')
     await user.click(screen.getByRole('button', { name: /greet/i }))
@@ -223,7 +223,7 @@ describe('GreetingForm', () => {
   // -------------------------------------------------------------------------
   it('should display BW Wappen image for Schwäbisch', async () => {
     const user = userEvent.setup()
-    vi.stubGlobal('fetch', mockFetchOk({ message: 'Grüaß di, Daniel! 👋', language: 'Schwäbisch', flag: 'bw' }))
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Grüaß di, Daniel! 👋', language: 'Schwäbisch', flag: 'bw', joke: 'Test-Witz' }))
     render(<GreetingForm />)
     await user.type(screen.getByRole('textbox', { name: /name/i }), 'Daniel')
     await user.click(screen.getByRole('button', { name: /greet/i }))
@@ -231,5 +231,59 @@ describe('GreetingForm', () => {
     const img = screen.getByAltText('Baden-Württemberg')
     expect(img).toBeInTheDocument()
     expect(img).toHaveAttribute('src', expect.stringContaining('Baden-W'))
+  })
+
+  // -------------------------------------------------------------------------
+  // 11. Displays joke below the greeting message on success
+  // -------------------------------------------------------------------------
+  it('should display joke below the greeting message on success', async () => {
+    const user = userEvent.setup()
+    vi.stubGlobal('fetch', mockFetchOk({ message: 'Hallo, Daniel! 👋', language: 'Deutsch', flag: '🇩🇪', joke: 'Warum können Geister so schlecht lügen? Weil man durch sie hindurchsehen kann.' }))
+    render(<GreetingForm />)
+    await user.type(screen.getByRole('textbox', { name: /name/i }), 'Daniel')
+    await user.click(screen.getByRole('button', { name: /greet/i }))
+    await screen.findByRole('status')
+    expect(screen.getByTestId('joke')).toHaveTextContent('Warum können Geister')
+  })
+
+  // -------------------------------------------------------------------------
+  // 12. Does not display joke on HTTP error
+  // -------------------------------------------------------------------------
+  it('should not display joke on HTTP error', async () => {
+    const user = userEvent.setup()
+    vi.stubGlobal('fetch', mockFetchError(400, { detail: 'Bad Request' }))
+    render(<GreetingForm />)
+    await user.click(screen.getByRole('button', { name: /greet/i }))
+    await screen.findByRole('alert')
+    expect(screen.queryByTestId('joke')).not.toBeInTheDocument()
+  })
+
+  // -------------------------------------------------------------------------
+  // 13. Does not display joke on network failure
+  // -------------------------------------------------------------------------
+  it('should not display joke on network failure', async () => {
+    const user = userEvent.setup()
+    vi.stubGlobal('fetch', mockFetchNetworkFailure('Network error'))
+    render(<GreetingForm />)
+    await user.click(screen.getByRole('button', { name: /greet/i }))
+    await screen.findByRole('alert')
+    expect(screen.queryByTestId('joke')).not.toBeInTheDocument()
+  })
+
+  // -------------------------------------------------------------------------
+  // 14. Handles missing joke field gracefully (no crash, no joke rendered)
+  // -------------------------------------------------------------------------
+  it('should handle missing joke field gracefully (no crash, no joke rendered)', async () => {
+    const user = userEvent.setup()
+    // API response without joke field (old client scenario)
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ message: 'Hello, World! 👋', language: 'English', flag: '🇬🇧' }),
+    }))
+    render(<GreetingForm />)
+    await user.click(screen.getByRole('button', { name: /greet/i }))
+    await screen.findByRole('status')
+    expect(screen.queryByTestId('joke')).not.toBeInTheDocument()
   })
 })
