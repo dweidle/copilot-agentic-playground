@@ -6,6 +6,28 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
+## [0.7.0] - 2026-03-23
+
+### Maintenance
+
+- Bump org.springframework.boot:spring-boot-starter-parent ([`7cd22fd`](https://github.com/dweidle/copilot-agentic-playground/commit/7cd22fd10e26f9d216fc39ff612e3d83c630c850))
+
+
+
+## [0.6.0] - 2026-03-23
+
+### Documentation
+
+- Update for v0.5.0 [skip ci] ([`8bb5873`](https://github.com/dweidle/copilot-agentic-playground/commit/8bb5873b70acae416348b1c8e48422d5857dbd0c))
+
+
+
+### Maintenance
+
+- Bump com.diffplug.spotless:spotless-maven-plugin ([`9c33b70`](https://github.com/dweidle/copilot-agentic-playground/commit/9c33b70f97fa0472a62fd45fb64cc1d6556987d9))
+
+
+
 ## [0.5.0] - 2026-03-23
 
 ### Documentation
