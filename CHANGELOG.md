@@ -6,6 +6,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
 
+## [0.8.0] - 2026-03-23
+
+### Documentation
+
+- Update for v0.7.0 [skip ci] ([`4be1284`](https://github.com/dweidle/copilot-agentic-playground/commit/4be12849bd0fcff04f1d7f826d14e7b4ba339090))
+
+
+
+### Maintenance
+
+- Bump org.testcontainers:testcontainers-bom ([`321af51`](https://github.com/dweidle/copilot-agentic-playground/commit/321af518d1efdbf7582840c7ebc59196ac61f6a5))
+
+
+
 ## [0.7.0] - 2026-03-23
 
 ### Maintenance
