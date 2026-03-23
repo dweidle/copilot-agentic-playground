@@ -21,12 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class GreetingController {
 
     private final GreetUseCase greetUseCase;
+    private final JokeProvider jokeProvider;
 
     @GetMapping
     @Operation(
             summary = "Get a greeting",
             description =
-                    "Returns a personalized greeting. Defaults to 'World' if no name is"
+                    "Returns a personalized greeting with a random German joke. Defaults to 'World' if no name is"
                             + " provided.")
     @ApiResponse(responseCode = "200", description = "Greeting returned successfully")
     public GreetingResponse greet(
@@ -35,7 +36,13 @@ public class GreetingController {
                     String name) {
         log.trace("GET /api/greeting called with name='{}'", name);
         Greeting greeting = greetUseCase.greet(name);
-        GreetingResponse response = GreetingWebMapper.INSTANCE.toResponse(greeting);
+        String joke = jokeProvider.randomJoke();
+        GreetingResponse response =
+                new GreetingResponse(
+                        greeting.message(),
+                        greeting.language().getDisplayName(),
+                        greeting.language().getFlag(),
+                        joke);
         log.debug("Returning response: {}", response);
         return response;
     }
